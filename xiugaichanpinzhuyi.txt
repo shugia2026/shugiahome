@@ -1,0 +1,53 @@
+增加新品--不需要改任何页面代码，只要在两个文件里按模板补数据，列表页、详情页、询盘邮件就会自动带上它。给你一套标准操作：
+
+方式一：礼盒作为系列里的一个"新单品"（推荐，零代码）
+以蜜润系列（gold-pearl）要加一个 “5+3 礼盒” 为例，打开 js\product-data.js，找到该系列块，改 5 处：
+
+① 数量加 1
+
+productCount: 6,   →   productCount: 7,
+② productNames 数组末尾追加英文名
+
+"Bio-Gold Pearl & Honey Regenerative Foam Cleanser",
+"Bio-Gold Pearl & Honey Gift Set (5+3)"      ← 新增
+③ productImages 数组末尾追加礼盒主图
+
+"./images/mirun/goldpearl-p06.webp",
+"./images/mirun/goldpearl-giftset.webp"      ← 新增（图先放进 images\mirun\）
+④ products 数组末尾追加一个完整条目（⚠️ id 必须是 系列id-p07，序号要和位置对上，否则对不上号）
+
+{
+  id: "gold-pearl-p07",
+  img: "./images/mirun/goldpearl-giftset.webp",
+  name: "Bio-Gold Pearl & Honey Gift Set (5+3)",
+  desc: "",
+  gallery: [
+    "./images/mirun/goldpearl-giftset-01.webp",
+    "./images/mirun/goldpearl-giftset-02.webp"
+  ],
+  features: [
+    "Includes toner, lotion, essence, cream, eye serum + 3 bonuses",
+    "Premium gift packaging, ideal for retail & gifting seasons",
+    "Full retail box with barcode area available",
+    "Private label & OEM available"
+  ],
+  detail: [
+    "./images/mirun/goldpearl-giftset/details1.webp",
+    "./images/mirun/goldpearl-giftset/details2.webp"
+  ]
+},
+gallery/detail 里没有的图会自动用系列其他图兜底，所以最少只准备 1 张主图 + 几张详情图也行。
+
+⑤ 价格进 js\pricing.js（不填就用系列价，礼盒一般要单独定价）
+
+byProduct: {
+  'gold-pearl-p07': { priceMin: '28.00', priceMax: '45.00', moq: '500 pcs' },
+  ...
+}
+注意 moq 字段可以在这层单独覆盖，不设就沿用默认 500 pcs。
+
+改完保存 → 浏览器 Ctrl+F5 → 该系列列表页就会出现第 7 张卡片，点进去详情页全套自动生效。
+
+图片的两个硬性要求
+必须是 .webp 格式（长边 ≤1600 最佳）。把原图给我，我用现成脚本批量转；或告诉我图片位置我直接处理
+文件名不能带空格、括号、中文，如 gift set (1).png ✗ → giftset-01.webp ✓
