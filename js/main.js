@@ -1,6 +1,88 @@
 // ============================================
-// Shared JS for Tianjin Lianhe Youxiang Website
+// Shared JS for Tianjin Orient Natural Cosmetics Co., Ltd.  Website
 // ============================================
+
+// ---------- Inquiry delivery (FormSubmit.co, no backend needed) ----------
+// Inquiries are forwarded to this mailbox. Change the address here only.
+var INQUIRY_ENDPOINT = 'https://formsubmit.co/ajax/shugia@shugiahome.com';
+
+function collectFormData(form) {
+  var payload = {};
+  Array.prototype.forEach.call(form.elements, function(el) {
+    if (!el.name || el.disabled || el.type === 'submit' || el.type === 'button') return;
+    if (el.name === '_honey') { if (el.checked) payload[el.name] = el.value; return; } // honeypot must stay empty for real users
+    if ((el.type === 'checkbox' || el.type === 'radio') && !el.checked) return;
+    payload[el.name] = el.value.trim ? el.value.trim() : el.value;
+  });
+  return payload;
+}
+
+function showFormError(form, message) {
+  var box = form.querySelector('.form-error-note');
+  if (!box) {
+    box = document.createElement('p');
+    box.className = 'form-error-note';
+    box.setAttribute('style', 'margin:1rem 0 0;padding:0.9rem 1rem;border-radius:4px;background:#FDF3F3;border:1px solid #F0C7C7;color:#9B2C2C;font-size:0.9rem;line-height:1.6;');
+    form.appendChild(box);
+  }
+  box.textContent = message;
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function sendInquiry(form, successEl, subjectText) {
+  var payload = collectFormData(form);
+  payload._subject = subjectText;
+  payload._template = 'table';
+
+  // Local preview (file:// or localhost) cannot deliver mail — show success UI only.
+  if (location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
+    console.warn('[inquiry] local preview: form delivery skipped. It will submit for real once the site is deployed to your domain.');
+    form.style.display = 'none';
+    successEl.classList.add('show');
+    successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return Promise.resolve();
+  }
+
+  var btn = form.querySelector('button[type="submit"]');
+  var label = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Sending…';
+  }
+
+  return fetch(INQUIRY_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(function(res) {
+      return res.json().then(function(data) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return data;
+      }, function() {
+        throw new Error('HTTP ' + res.status);
+      });
+    })
+    .then(function(data) {
+      // FormSubmit returns strings: { success: "true" | "false", message: "..." }
+      if (!data || data.success === false || data.success === 'false') {
+        throw new Error((data && data.message) ? data.message : 'submission failed');
+      }
+      form.style.display = 'none';
+      successEl.classList.add('show');
+      successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })
+    .catch(function(err) {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = label;
+      }
+      showFormError(
+        form,
+        'Your inquiry could not be sent right now (' + err.message + '). Please email shugia@shugiahome.com or chat on WhatsApp +86 186 2202 3128 — we reply within 24 hours.'
+      );
+    });
+}
 
 // Navigation scroll effect
 document.addEventListener('DOMContentLoaded', function() {
@@ -73,12 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Show success message
-      contactForm.style.display = 'none';
-      formSuccess.classList.add('show');
-
-      // Scroll to success message
-      formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      sendInquiry(contactForm, formSuccess, 'Website Inquiry - ' + name);
     });
   }
 
@@ -154,9 +231,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      detailInquiryForm.style.display = 'none';
-      detailInquirySuccess.classList.add('show');
-      detailInquirySuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const productField = detailInquiryForm.querySelector('input[name="product"]');
+      const productName = productField && productField.value.trim()
+        ? productField.value.trim()
+        : (document.getElementById('productTitle') || {}).textContent || 'Product';
+
+      sendInquiry(detailInquiryForm, detailInquirySuccess, 'Product Inquiry - ' + productName + ' - ' + name);
     });
   }
 

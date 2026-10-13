@@ -1,5 +1,5 @@
 /* ============================================
-   Tianjin Lianhe Youxiang - Cosmetic OEM/ODM
+   Tianjin Orient Natural Cosmetics Co., Ltd.  - Cosmetic OEM/ODM
    Global Stylesheet
    ============================================ */
 
@@ -425,7 +425,9 @@ h4 { font-size: 1.25rem; }
 .hero-slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;   /* 完整显示整张图片，不裁切 */
+  object-position: center;
+  background-color: #000; /*图片两边/上下空余位置填充黑色，你也可以改成#fff白色 */
 }
 
 .hero-overlay {
@@ -474,6 +476,19 @@ h4 { font-size: 1.25rem; }
   position: relative;
   z-index: 2;
   max-width: 680px;
+}
+
+/* Visually hidden but discoverable by screen readers and search engines */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .hero-eyebrow {
@@ -1042,7 +1057,7 @@ h4 { font-size: 1.25rem; }
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a96e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/500/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a96e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .cta-content {
@@ -1567,7 +1582,7 @@ h4 { font-size: 1.25rem; }
 .product-price-value {
   color: var(--navy);
   font-weight: 600;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 1.1rem;
 }
 
@@ -1911,7 +1926,7 @@ h4 { font-size: 1.25rem; }
 .product-detail-gallery {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0rem;
   margin-top: 1rem;
 }
 
@@ -2053,27 +2068,24 @@ h4 { font-size: 1.25rem; }
    About Page
    ============================================ */
 .about-hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+  display: flex;
+  gap: 40px;
+  align-items: stretch;
 }
 
 .about-hero-image {
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
+  flex: 0 0 52%;   /* 图片栏从48%调到52% */
+}
+
+.about-text {
+  flex: 1;
 }
 
 .about-hero-image img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-
-.about-hero-image .placeholder-label {
-  bottom: 16px;
-  left: 16px;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .about-text h2 {
@@ -2666,3 +2678,10 @@ h4 { font-size: 1.25rem; }
     border-right: none;
   }
 }
+
+/* ===== Volume price-break table (product detail) ===== */
+.price-tiers { margin-top: 1rem; }
+.price-tiers-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.price-tiers-table th, .price-tiers-table td { border: 1px solid var(--gray-200, #e5e5e5); padding: 0.5rem 0.75rem; text-align: left; }
+.price-tiers-table th { background: var(--cream, #faf7f2); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+.price-tiers-table td:last-child { color: var(--gold, #b08d3e); font-weight: 600; text-align: right; }
