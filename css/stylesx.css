@@ -2484,12 +2484,12 @@ h4 { font-size: 1.25rem; }
   }
 
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: 1fr 1fr !important; /* two columns on phones */
     gap: 1rem;
   }
 
   .product-card-body {
-    padding: 1rem;
+    padding: 0.85rem;
   }
 
   .product-card-title {
@@ -2620,8 +2620,13 @@ h4 { font-size: 1.25rem; }
 
   .series-banner {
     height: auto;
-    min-height: 360px;
-    padding: 3rem 0 2rem;
+    min-height: 320px;
+    padding: 2.5rem 0 1.8rem;
+  }
+
+  .series-banner-bg img {
+    object-fit: cover;
+    object-position: center 40%; /* show the middle strip of the long artwork */
   }
 
   .series-banner-title {

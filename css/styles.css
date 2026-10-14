@@ -2395,6 +2395,68 @@ h4 { font-size: 1.25rem; }
 }
 
 @media (max-width: 768px) {
+  /* --- mobile overflow safety (prevents sideways pan / cut images) --- */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+
+  .product-detail > *,
+  .product-detail-grid > *,
+  .product-gallery,
+  .product-info {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .specs-table,
+  .specs-table table,
+  .price-tiers-table {
+    width: 100%;
+    table-layout: fixed;
+    overflow-wrap: break-word;
+  }
+
+  .specs-table th,
+  .specs-table td,
+  .price-tiers-table th,
+  .price-tiers-table td {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .product-main-image img,
+  .product-thumb img,
+  .product-detail-img-block img {
+    max-width: 100%;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr 1fr !important; /* two columns on phones */
+    gap: 1rem !important;
+  }
+
+  .product-card-body {
+    padding: 0.85rem;
+  }
+
+  .product-card-title {
+    font-size: 0.95rem;
+  }
+
+  .product-card-desc {
+    font-size: 0.78rem;
+  }
+
+  .product-card-meta {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
   :root {
     --space-lg: 2.5rem;
     --space-xl: 3.5rem;
