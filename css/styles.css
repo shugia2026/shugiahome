@@ -2447,9 +2447,20 @@ h4 { font-size: 1.25rem; }
 
   .hero {
     margin-top: var(--nav-height-mobile);
-    min-height: 420px;
-    height: 65vh;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 1600 / 542; /* match carousel artwork, no letterbox */
+    max-height: 60vh;
     padding: 0;
+  }
+
+  .hero-slide img {
+    object-fit: cover;
+    background-color: transparent;
+  }
+
+  .hero-dots {
+    bottom: 0.5rem;
   }
 
   .hero-title {
